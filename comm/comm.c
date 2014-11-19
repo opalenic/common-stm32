@@ -130,6 +130,18 @@ enum result comm_send_buf(uint8_t *buf, uint16_t len)
 	return ret;
 }
 
+
+void comm_send_buf_blocking(uint8_t *buf, uint16_t len)
+{
+	for (uint16_t i = 0; i < len; i++) {
+		enum result res;
+		do {
+			res = comm_send_ch(buf[i]);
+		} while (res != OK);
+	}
+}
+
+
 enum result comm_send_str(uint8_t *str)
 {
 	enum result ret = OK;
@@ -141,6 +153,20 @@ enum result comm_send_str(uint8_t *str)
 
 	return ret;
 }
+
+
+void comm_send_str_blocking(uint8_t *str)
+{
+	uint16_t i = 0;
+	while (str[i] != '\0') {
+		enum result res;
+		do {
+			res = comm_send_ch(str[i]);
+		} while (res != OK);
+		i++;
+	}
+}
+
 
 enum result comm_send_num_s(int64_t num)
 {
