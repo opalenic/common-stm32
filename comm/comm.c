@@ -96,7 +96,7 @@ static void recv_next_ch(uint8_t ch)
 	}
 }
 
-enum result comm_send_ch(uint8_t ch)
+result_t comm_send_ch(uint8_t ch)
 {
 	if (tx_buffer_overflow != true) {
 		tx_buffer[tx_buffer_write_pos] = ch;
@@ -118,9 +118,9 @@ enum result comm_send_ch(uint8_t ch)
 	}
 }
 
-enum result comm_send_buf(uint8_t *buf, uint16_t len)
+result_t comm_send_buf(uint8_t *buf, uint16_t len)
 {
-	enum result ret = OK;
+	result_t ret = OK;
 	uint8_t i = 0;
 
 	while (ret == OK && i < len) {
@@ -134,7 +134,7 @@ enum result comm_send_buf(uint8_t *buf, uint16_t len)
 void comm_send_buf_blocking(uint8_t *buf, uint16_t len)
 {
 	for (uint16_t i = 0; i < len; i++) {
-		enum result res;
+		result_t res;
 		do {
 			res = comm_send_ch(buf[i]);
 		} while (res != OK);
@@ -142,9 +142,9 @@ void comm_send_buf_blocking(uint8_t *buf, uint16_t len)
 }
 
 
-enum result comm_send_str(uint8_t *str)
+result_t comm_send_str(uint8_t *str)
 {
-	enum result ret = OK;
+	result_t ret = OK;
 	uint8_t i = 0;
 
 	while (ret == OK && str[i] != '\0') {
@@ -159,7 +159,7 @@ void comm_send_str_blocking(uint8_t *str)
 {
 	uint16_t i = 0;
 	while (str[i] != '\0') {
-		enum result res;
+		result_t res;
 		do {
 			res = comm_send_ch(str[i]);
 		} while (res != OK);
@@ -168,7 +168,7 @@ void comm_send_str_blocking(uint8_t *str)
 }
 
 
-enum result comm_send_num_s(int64_t num)
+result_t comm_send_num_s(int64_t num)
 {
 	if (num < 0) {
 		if (comm_send_ch('-') != OK) {
@@ -182,7 +182,7 @@ enum result comm_send_num_s(int64_t num)
 }
 
 
-enum result comm_send_num_u(uint64_t num)
+result_t comm_send_num_u(uint64_t num)
 {
 	uint16_t tmp = num;
 	uint8_t num_digits = 0;
@@ -211,7 +211,7 @@ enum result comm_send_num_u(uint64_t num)
 }
 
 
-enum result comm_read_ch(uint8_t *ch)
+result_t comm_read_ch(uint8_t *ch)
 {
 	if (rx_buffer_read_pos != rx_buffer_write_pos ||
 		rx_buffer_overflow == true) {

@@ -23,16 +23,16 @@
 
 void comm_init(void);
 
-enum result comm_send_ch(uint8_t ch);
-enum result comm_send_buf(uint8_t *buf, uint16_t len);
-enum result comm_send_str(uint8_t *str);
-enum result comm_send_num_s(int64_t num);
-enum result comm_send_num_u(uint64_t num);
+result_t comm_send_ch(uint8_t ch);
+result_t comm_send_buf(uint8_t *buf, uint16_t len);
+result_t comm_send_str(uint8_t *str);
+result_t comm_send_num_s(int64_t num);
+result_t comm_send_num_u(uint64_t num);
 
 void comm_send_buf_blocking(uint8_t *buf, uint16_t len);
 void comm_send_str_blocking(uint8_t *str);
 
-enum result comm_read_ch(uint8_t *ch);
+result_t comm_read_ch(uint8_t *ch);
 uint8_t comm_read_ch_blocking(void);
 
 void comm_read_buf(uint8_t *buf, uint16_t len);
