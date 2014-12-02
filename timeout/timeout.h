@@ -11,7 +11,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool timeout_start(uint32_t timeout_ms)
-bool timeout_elapsed(void);
+void timeout_init(void);
+bool timeout_start(uint32_t timeout_ms, bool periodic, void (*callback)(void*), void *cb_params);
+void timeout_stop(void);
+bool timeout_has_elapsed(void);
 
 #endif /* TIMEOUT_H_ */
