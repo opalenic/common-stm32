@@ -20,7 +20,7 @@
 #define TIMER_A_ISR tim16_isr
 #define TIMER_B_ISR tim17_isr
 
-#define IRQ_PRIO (0x03 << 6)
+#define IRQ_PRIO (0x02 << 6)
 #define TICKS_PER_MS 48000
 
 
@@ -33,8 +33,6 @@ struct timer_conf {
 	void *params;
 	bool periodic;
 	bool running;
-
-	bool first_it;
 };
 
 static struct timer_conf conf[] = {
@@ -75,6 +73,8 @@ void timeout_init(void)
 
 		nvic_enable_irq(conf[i].irq);
 		nvic_set_priority(conf[i].irq, IRQ_PRIO);
+
+		timer_generate_event(conf[i].base, TIM_EGR_UG);
 	}
 }
 
@@ -88,7 +88,7 @@ bool timeout_start(enum timeout_timer timer, uint32_t timeout_ms, bool periodic,
 		return false;
 	}
 
-	timer_set_counter(conf[timer].base, 1);
+	timer_set_counter(conf[timer].base, 0);
 	timer_set_period(conf[timer].base, timeout_ms);
 
 	conf[timer].periodic = periodic;
@@ -97,8 +97,6 @@ bool timeout_start(enum timeout_timer timer, uint32_t timeout_ms, bool periodic,
 	conf[timer].params = params;
 
 	conf[timer].running = true;
-
-	conf[timer].first_it = true;
 
 	timer_enable_counter(conf[timer].base);
 
@@ -129,17 +127,13 @@ static inline void isr_handler(enum timeout_timer timer)
 {
 	timer_clear_flag(conf[timer].base, TIM_SR_UIF);
 
-	if (!conf[timer].first_it) {
-		if (!conf[timer].periodic) {
-			conf[timer].running = false;
-			timer_disable_counter(conf[timer].base);
-		}
+	if (!conf[timer].periodic) {
+		conf[timer].running = false;
+		timer_disable_counter(conf[timer].base);
+	}
 
-		if (conf[timer].callback != NULL) {
-			conf[timer].callback(conf[timer].params);
-		}
-	} else {
-		conf[timer].first_it = false;
+	if (conf[timer].callback != NULL) {
+		conf[timer].callback(conf[timer].params);
 	}
 }
 
