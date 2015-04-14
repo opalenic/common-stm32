@@ -87,7 +87,6 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 	msg_code = 0
 
 	for msg in config:
-		msg_code += 1
 
 		msg_model = {
 			'name_uppercase': msg['name'].upper(),
@@ -95,6 +94,8 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 			'code': msg_code,
 			'text': msg['text']
 		}
+
+		msg_code += 1
 
 		if 'args' in msg:
 			msg_model['function_param_str'] = ", ".join(
