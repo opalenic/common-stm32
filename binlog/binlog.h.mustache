@@ -1,0 +1,23 @@
+/*
+ * binlog.h
+ *
+ * Generated on: {{ generated_on }}
+ */
+
+#ifndef BINLOG_H_
+#define BINLOG_H_
+
+#include <stdint.h>
+#include <stdbool.h>
+
+void binlog_init(bool (*send_func)(uint8_t ch), void (*error_func)(void));
+
+{{# log_msg_types }}
+/**
+ * Log message text: {{ text }}
+ */
+void binlog_{{ name_lowercase }}({{ function_param_str}});
+
+{{/ log_msg_types }}
+
+#endif /* BINLOG_H_ */

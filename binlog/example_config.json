@@ -1,0 +1,34 @@
+[
+	{
+		"name": "PARAM_ERR",
+		"text": "Parameter error."
+	},
+	{
+		"name": "SHUTDOWN_ERR",
+		"text": "Cannot shutdown: {shutdown_code}",
+		"args": [
+			{
+				"name": "shutdown_code",
+				"type": "uint8_t"
+			}
+		]
+	},
+	{
+		"name": "PHOTO",
+		"text": "Could not take {photo_code} photo: {timeout}",
+		"args": [
+			{
+				"name": "timeout",
+				"type": "uint16_t"
+			},
+			{
+				"name": "photo_code",
+				"type": "uint8_t"
+			},
+			{
+				"name": "last_arg",
+				"type": "int64_t"
+			}
+		]
+	}
+]
