@@ -98,10 +98,11 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 		msg_code += 1
 
 		if 'args' in msg:
+			msg_model['has_arguments'] = True
+
 			msg_model['function_param_str'] = ", ".join(
 				map(lambda arg: "{0} {1}".format(arg['type'], arg['name']), msg['args']))
 
-			msg_model['has_arguments'] = True
 			msg_model['argument_buffer_len'] = sum(map(lambda arg: data_type_size_lut[arg['type']], msg['args']))
 
 			msg_model['argument_to_bytes'] = []
@@ -116,10 +117,11 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 						'conversion': conversion.format(arg_name=arg['name'])
 					})
 
-				msg_model['argument_to_bytes'].append({'conversion_list': conversion_list})
+				msg_model['argument_to_bytes'].append(conversion_list)
 				pos_in_buf += data_type_size_lut[arg['type']]
 
 		else:
+			msg_model['has_arguments'] = False
 			msg_model['function_param_str'] = "void"
 
 		model['log_msg_types'].append(msg_model)

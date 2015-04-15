@@ -49,9 +49,9 @@ void binlog_{{ name_lowercase }}({{ function_param_str }})
 	uint8_t buf[{{ argument_buffer_len}}];
 
 	{{# argument_to_bytes }}
-	{{# conversion_list }}
+	{{# . }}
 	buf[{{ pos }}] = {{{ conversion }}};
-	{{/ conversion_list }}
+	{{/ . }}
 
 	{{/ argument_to_bytes }}
 	log({{ name_uppercase }}, buf, {{ argument_buffer_len }});
