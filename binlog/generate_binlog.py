@@ -74,9 +74,10 @@ arg_conversion_lut = {
 	]
 }
 
-my_dir = os.path.dirname(os.path.abspath(__file__))
+working_dir = os.getcwd()
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
-with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
+with open(os.path.join(working_dir, sys.argv[1]), 'r') as config_file:
 	config = json.load(config_file)
 	
 	model = {
@@ -129,15 +130,15 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 		model['log_msg_types'].append(msg_model)
 
 
-	with open(os.path.join(my_dir, 'binlog.c.mustache'), 'r') as c_template_file:
+	with open(os.path.join(script_dir, 'binlog.c.mustache'), 'r') as c_template_file:
 
-		with open(os.path.join(my_dir, '{}.c'.format(sys.argv[2].lower())), 'w') as c_output_file:
+		with open(os.path.join(working_dir, '{}.c'.format(sys.argv[2].lower())), 'w') as c_output_file:
 
 			c_output_file.write(pystache.render(c_template_file.read(), model))
 
 
-	with open(os.path.join(my_dir, 'binlog.h.mustache'), 'r') as h_template_file:
+	with open(os.path.join(script_dir, 'binlog.h.mustache'), 'r') as h_template_file:
 
-		with open(os.path.join(my_dir, '{}.h'.format(sys.argv[2].lower())), 'w') as h_output_file:
+		with open(os.path.join(working_dir, '{}.h'.format(sys.argv[2].lower())), 'w') as h_output_file:
 
 			h_output_file.write(pystache.render(h_template_file.read(), model))

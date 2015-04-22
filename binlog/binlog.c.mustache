@@ -6,7 +6,7 @@
 
 #include <stddef.h>
 
-#include <binlog.h>
+#include <{{ func_prefix_lowercase }}.h>
 
 {{# log_msg_types }}
 #define {{ name_uppercase }} {{ code }}
@@ -60,4 +60,5 @@ void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 	log({{ name_uppercase }}, NULL, 0);
 	{{/ has_arguments }}
 }
+
 {{/ log_msg_types }}
