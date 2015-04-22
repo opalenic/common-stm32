@@ -78,10 +78,12 @@ my_dir = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 	config = json.load(config_file)
-
+	
 	model = {
 		'log_msg_types': [],
-		'generated_on': datetime.datetime.now().strftime('%c')
+		'generated_on': datetime.datetime.now().strftime('%c'),
+		'func_prefix_uppercase': sys.argv[2].upper(),
+		'func_prefix_lowercase': sys.argv[2].lower(),
 	}
 
 	msg_code = 0
@@ -129,13 +131,13 @@ with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
 
 	with open(os.path.join(my_dir, 'binlog.c.mustache'), 'r') as c_template_file:
 
-		with open(os.path.join(my_dir, 'binlog.c'), 'w') as c_output_file:
+		with open(os.path.join(my_dir, '{}.c'.format(sys.argv[2].lower())), 'w') as c_output_file:
 
 			c_output_file.write(pystache.render(c_template_file.read(), model))
 
 
 	with open(os.path.join(my_dir, 'binlog.h.mustache'), 'r') as h_template_file:
 
-		with open(os.path.join(my_dir, 'binlog.h'), 'w') as h_output_file:
+		with open(os.path.join(my_dir, '{}.h'.format(sys.argv[2].lower())), 'w') as h_output_file:
 
 			h_output_file.write(pystache.render(h_template_file.read(), model))

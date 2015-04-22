@@ -1,5 +1,5 @@
 /*
- * binlog.c
+ * {{ func_prefix_lowercase }}.c
  *
  * Generated on: {{ generated_on }}
  */
@@ -36,14 +36,14 @@ static void log(uint8_t msg_type, uint8_t *arg_buf, uint8_t arg_buf_len)
 	}
 }
 
-void binlog_init(bool (*send_func)(uint8_t ch), void (*error_func)(void)) 
+void {{ func_prefix_lowercase }}_init(bool (*send_func)(uint8_t ch), void (*error_func)(void)) 
 {
 	send = send_func;
 	error = error_func;
 }
 
 {{# log_msg_types }}
-void binlog_{{ name_lowercase }}({{ function_param_str }})
+void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 {
 	{{# has_arguments }}
 	uint8_t buf[{{ argument_buffer_len}}];
