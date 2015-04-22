@@ -34,9 +34,8 @@ conversion_lut = {
 	'int64_t': lambda buf: ctypes.c_int64((buf[0] << 56) | (buf[1] << 48) | (buf[2] << 40) | (buf[3] << 32) | (buf[4] << 24) | (buf[5] << 16) | (buf[6] << 8) | buf[7]).value
 }
 
-my_dir = os.path.dirname(os.path.abspath(__file__))
 
-with open(os.path.join(my_dir, sys.argv[1]), 'r') as config_file:
+with open(os.path.join(os.getcwd(), sys.argv[1]), 'r') as config_file:
 	messages = json.load(config_file)
 
 	while True:		
