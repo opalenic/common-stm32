@@ -15,18 +15,18 @@
 	},
 	{
 		"name": "PHOTO",
-		"text": "Could not take {photo_code} photo: {timeout}",
+		"text": "Could not take {second_u8} photo: {first_u16} {third_i64}",
 		"args": [
 			{
-				"name": "timeout",
+				"name": "first_u16",
 				"type": "uint16_t"
 			},
 			{
-				"name": "photo_code",
+				"name": "second_u8",
 				"type": "uint8_t"
 			},
 			{
-				"name": "last_arg",
+				"name": "third_i64",
 				"type": "int64_t"
 			}
 		]
