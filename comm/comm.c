@@ -74,9 +74,8 @@ static void send_next_ch(void)
 		ch++;
 		usart_send(USART1, tx_buffer[tx_buffer_read_pos]);
 
-		tx_buffer_read_pos = (tx_buffer_read_pos + 1) % BUFFER_SIZE;
+		tx_buffer_read_pos = (uint16_t) (tx_buffer_read_pos + 1) % BUFFER_SIZE;
 		tx_buffer_overflow = false;
-		bsp_led_off(LEDG);
 	} else {
 		usart_disable_tx_interrupt(USART1);
 		tx_state = IDLE;
@@ -87,11 +86,10 @@ static void recv_next_ch(uint8_t ch)
 {
 	if (rx_buffer_overflow != true) {
 		rx_buffer[rx_buffer_write_pos] = ch;
-		rx_buffer_write_pos = (rx_buffer_write_pos + 1) % BUFFER_SIZE;
+		rx_buffer_write_pos = (uint16_t) (rx_buffer_write_pos + 1) % BUFFER_SIZE;
 
 		if (rx_buffer_write_pos == rx_buffer_read_pos) {
 			rx_buffer_overflow = true;
-			bsp_led_on(LEDB);
 		}
 	}
 }
@@ -104,7 +102,6 @@ bool comm_send_ch(uint8_t ch)
 
 		if (tx_buffer_write_pos == tx_buffer_read_pos) {
 			tx_buffer_overflow = true;
-			bsp_led_on(LEDG);
 		}
 
 		if (tx_state == IDLE) {
@@ -219,7 +216,6 @@ bool comm_read_ch(uint8_t *ch)
 		uint8_t rx_ch = rx_buffer[rx_buffer_read_pos];
 		rx_buffer_read_pos = (rx_buffer_read_pos + 1) % BUFFER_SIZE;
 		rx_buffer_overflow = false;
-		bsp_led_off(LEDB);
 
 		*ch = rx_ch;
 		return true;
