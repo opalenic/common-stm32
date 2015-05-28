@@ -8,7 +8,6 @@
 #ifndef COMM_H_
 #define COMM_H_
 
-#include "common.h"
 #include <stdint.h>
 #include <stdbool.h>
 
