@@ -11,7 +11,7 @@
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/timer.h>
-#include <libopencm3/dispatch/nvic.h>
+#include <libopencm3/cm3/nvic.h>
 
 #include <timeout.h>
 #include <common.h>
