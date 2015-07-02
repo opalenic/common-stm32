@@ -14,7 +14,7 @@ void {{ func_prefix_lowercase }}_init(bool (*send_func)(uint8_t ch), void (*erro
 
 {{# log_msg_types }}
 /**
- * Log message text: {{ text }}
+ * Log message text: {{{ text }}}
  */
 void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str}});
 
