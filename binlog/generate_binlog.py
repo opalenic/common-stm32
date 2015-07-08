@@ -81,7 +81,7 @@ with open(os.path.join(working_dir, sys.argv[1]), 'r') as config_file:
 	config = json.load(config_file)
 	
 	model = {
-		'log_msg_types': [],
+		'messages': [],
 		'generated_on': datetime.datetime.now().strftime('%c'),
 		'func_prefix_uppercase': sys.argv[2].upper(),
 		'func_prefix_lowercase': sys.argv[2].lower(),
@@ -101,16 +101,14 @@ with open(os.path.join(working_dir, sys.argv[1]), 'r') as config_file:
 		msg_code += 1
 
 		if 'args' in msg:
-			msg_model['has_arguments'] = True
-
 			msg_model['function_param_str'] = ", ".join(
 				map(lambda arg: "{0} {1}".format(arg['type'], arg['name']), msg['args']))
 
-			msg_model['argument_buffer_len'] = sum(map(lambda arg: data_type_size_lut[arg['type']], msg['args']))
+			msg_model['message_buffer_len'] = sum(map(lambda arg: data_type_size_lut[arg['type']], msg['args'])) + 1
 
 			msg_model['argument_to_bytes'] = []
 
-			pos_in_buf = 0
+			pos_in_buf = 1
 			for arg in msg['args']:
 
 				conversion_list = []
@@ -124,10 +122,10 @@ with open(os.path.join(working_dir, sys.argv[1]), 'r') as config_file:
 				pos_in_buf += data_type_size_lut[arg['type']]
 
 		else:
-			msg_model['has_arguments'] = False
+			msg_model['message_buffer_len'] = 1
 			msg_model['function_param_str'] = "void"
 
-		model['log_msg_types'].append(msg_model)
+		model['messages'].append(msg_model)
 
 
 	with open(os.path.join(script_dir, 'binlog.c.mustache'), 'r') as c_template_file:

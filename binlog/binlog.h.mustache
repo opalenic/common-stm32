@@ -10,15 +10,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void {{ func_prefix_lowercase }}_init(bool (*send_func)(uint8_t ch), void (*error_func)(void));
+void {{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void));
 
-{{# log_msg_types }}
+{{# messages }}
 /**
  * Log message text: {{{ text }}}
  */
 void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str}});
 
-{{/ log_msg_types }}
+{{/ messages }}
 
 #endif /* {{ func_prefix_uppercase }}_H_ */
 

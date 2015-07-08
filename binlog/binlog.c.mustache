@@ -8,45 +8,36 @@
 
 #include "{{ func_prefix_lowercase }}.h"
 
-{{# log_msg_types }}
+{{# messages }}
 #define {{ name_uppercase }} {{ code }}
-{{/ log_msg_types }}
+{{/ messages }}
 
-static bool (*send)(uint8_t ch) = NULL;
+static uint8_t (*send)(uint8_t *msg_buf, uint8_t msg_buf_len) = NULL;
 static void (*error)(void) = NULL;
 
-static void send_msg(uint8_t msg_type, uint8_t *arg_buf, uint8_t arg_buf_len)
+static void send_msg(uint8_t *msg_buf, uint8_t msg_buf_len)
 {
 	if (send == NULL || error == NULL) {
 		return;
 	}
 
-	if (!send(msg_type)) {
+	if (send(msg_buf, msg_buf_len) != msg_buf_len) {
 		error();
-		return;
-	}
-
-	if (arg_buf_len > 0) {
-		for (uint8_t i = 0; i < arg_buf_len; i++) {
-			if (!send(arg_buf[i])) {
-				error();
-				return;
-			}
-		}
 	}
 }
 
-void {{ func_prefix_lowercase }}_init(bool (*send_func)(uint8_t ch), void (*error_func)(void)) 
+void {{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void)) 
 {
 	send = send_func;
 	error = error_func;
 }
 
-{{# log_msg_types }}
+{{# messages }}
 void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 {
-	{{# has_arguments }}
-	uint8_t buf[{{ argument_buffer_len}}];
+	uint8_t buf[{{ message_buffer_len }}];
+
+	buf[0] = {{ name_uppercase }};
 
 	{{# argument_to_bytes }}
 	{{# . }}
@@ -54,11 +45,7 @@ void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 	{{/ . }}
 
 	{{/ argument_to_bytes }}
-	send_msg({{ name_uppercase }}, buf, {{ argument_buffer_len }});
-	{{/ has_arguments }}
-	{{^ has_arguments }}
-	send_msg({{ name_uppercase }}, NULL, 0);
-	{{/ has_arguments }}
+	send_msg(buf, {{ message_buffer_len }});
 }
 
-{{/ log_msg_types }}
+{{/ messages }}
