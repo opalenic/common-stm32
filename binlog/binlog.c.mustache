@@ -26,14 +26,14 @@ static void send_msg(uint8_t *msg_buf, uint8_t msg_buf_len)
 	}
 }
 
-void {{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void)) 
+void _{{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void)) 
 {
 	send = send_func;
 	error = error_func;
 }
 
 {{# messages }}
-void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
+void _{{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 {
 	uint8_t buf[{{ message_buffer_len }}];
 

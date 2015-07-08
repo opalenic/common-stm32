@@ -10,14 +10,57 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void {{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void));
+#ifdef {{ func_prefix_uppercase }}_ENABLE
+
+/**
+ * Initializes the binary logger.
+ * 
+ * @param send_func  Function used to send a log message. Takes a pointer to the
+ *                   message buffer and the message buffer length as parameters. 
+ *                   Returns the number of bytes successfuly sent.
+ * @param error_func Function called when send_func fails (i.e. returns a value
+ *                   different from the message buffer length).
+ */
+#define {{ func_prefix_lowercase }}_init(send_func, error_func) \
+	_{{ func_prefix_lowercase }}_init(send_func, error_func)
 
 {{# messages }}
 /**
  * Log message text: {{{ text }}}
+{{# has_params }}
+ *
+{{/ has_params }}
+{{# param_names }}
+ * @{{ . }}
+{{/ param_names }}
  */
-void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str}});
+#define {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ macro_param_str }}) \
+	_{{ func_prefix_lowercase }}_{{ name_lowercase }}({{ macro_param_str }}) 
+{{/ messages }}
 
+#else
+
+#define {{ func_prefix_lowercase }}_init(send_func, error_func) \
+	do { \
+		(void) sizeof(send_func); \
+		(void) sizeof(error_func); \
+	} while (false)
+
+{{# messages }}
+#define {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ macro_param_str }}) \
+	do { \
+{{# param_names }}
+		(void) sizeof({{ . }}); \
+{{/ param_names }}
+	} while (false)
+{{/ messages }}
+
+#endif
+
+void _{{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, uint8_t msg_buf_len), void (*error_func)(void));
+
+{{# messages }}
+void _{{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }});
 {{/ messages }}
 
 #endif /* {{ func_prefix_uppercase }}_H_ */

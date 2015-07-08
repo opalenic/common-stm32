@@ -101,8 +101,12 @@ with open(os.path.join(working_dir, sys.argv[1]), 'r') as config_file:
 		msg_code += 1
 
 		if 'args' in msg:
+			msg_model['has_params'] = True
 			msg_model['function_param_str'] = ", ".join(
 				map(lambda arg: "{0} {1}".format(arg['type'], arg['name']), msg['args']))
+
+			msg_model['param_names'] = list(map(lambda arg: arg['name'], msg['args']))
+			msg_model['macro_param_str'] = ", ".join(msg_model['param_names'])
 
 			msg_model['message_buffer_len'] = sum(map(lambda arg: data_type_size_lut[arg['type']], msg['args'])) + 1
 
