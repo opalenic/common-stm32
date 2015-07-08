@@ -15,9 +15,9 @@
 static bool (*send)(uint8_t ch) = NULL;
 static void (*error)(void) = NULL;
 
-static void log(uint8_t msg_type, uint8_t *arg_buf, uint8_t arg_buf_len)
+static void send_msg(uint8_t msg_type, uint8_t *arg_buf, uint8_t arg_buf_len)
 {
-	if (send == NULL || err == NULL) {
+	if (send == NULL || error == NULL) {
 		return;
 	}
 
@@ -54,10 +54,10 @@ void {{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 	{{/ . }}
 
 	{{/ argument_to_bytes }}
-	log({{ name_uppercase }}, buf, {{ argument_buffer_len }});
+	send_msg({{ name_uppercase }}, buf, {{ argument_buffer_len }});
 	{{/ has_arguments }}
 	{{^ has_arguments }}
-	log({{ name_uppercase }}, NULL, 0);
+	send_msg({{ name_uppercase }}, NULL, 0);
 	{{/ has_arguments }}
 }
 
