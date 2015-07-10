@@ -35,17 +35,17 @@ void _{{ func_prefix_lowercase }}_init(uint8_t (*send_func)(uint8_t *msg_buf, ui
 {{# messages }}
 void _{{ func_prefix_lowercase }}_{{ name_lowercase }}({{ function_param_str }})
 {
-	uint8_t buf[{{ message_buffer_len }}];
+	uint8_t __buf[{{ message_buffer_len }}];
 
-	buf[0] = {{ name_uppercase }};
+	__buf[0] = {{ name_uppercase }};
 
 	{{# argument_to_bytes }}
 	{{# . }}
-	buf[{{ pos }}] = {{{ conversion }}};
+	__buf[{{ pos }}] = {{{ conversion }}};
 	{{/ . }}
 
 	{{/ argument_to_bytes }}
-	send_msg(buf, {{ message_buffer_len }});
+	send_msg(__buf, {{ message_buffer_len }});
 }
 
 {{/ messages }}
