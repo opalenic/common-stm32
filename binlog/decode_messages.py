@@ -12,6 +12,8 @@ import ctypes
 
 import json
 
+import serial
+
 data_type_size_lut = {
 	'uint8_t': 1,
 	'int8_t': 1,
@@ -34,36 +36,36 @@ conversion_lut = {
 	'int64_t': lambda buf: ctypes.c_int64((buf[0] << 56) | (buf[1] << 48) | (buf[2] << 40) | (buf[3] << 32) | (buf[4] << 24) | (buf[5] << 16) | (buf[6] << 8) | buf[7]).value
 }
 
+with serial.Serial(sys.argv[1], 115200) as s:
+	with open(os.path.join(os.getcwd(), sys.argv[2]), 'r') as config_file:
+		messages = json.load(config_file)
 
-with open(os.path.join(os.getcwd(), sys.argv[1]), 'r') as config_file:
-	messages = json.load(config_file)
-
-	while True:		
-		try:
-			message_code = ord(sys.stdin.buffer.read(1))
-			
-			message_text = messages[message_code]['text']
-
-
-			if 'args' in messages[message_code]:
-
-				argument_buffer = sys.stdin.buffer.read(sum(map(lambda arg: data_type_size_lut[arg['type']], 				
-															messages[message_code]['args'])))
-
-				arguments = {}
-
-				pos_in_buf = 0
-				for arg in messages[message_code]['args']:
-					arg_len = data_type_size_lut[arg['type']]
-					arguments[arg['name']] = conversion_lut[arg['type']](argument_buffer[pos_in_buf:pos_in_buf + arg_len])
-
-					pos_in_buf += arg_len
+		while True:		
+			try:
+				message_code = ord(s.read(1))
+				
+				message_text = messages[message_code]['text']
 
 
-				message_text = message_text.format(**arguments)
+				if 'args' in messages[message_code]:
+
+					argument_buffer = s.read(sum(map(lambda arg: data_type_size_lut[arg['type']], 				
+																messages[message_code]['args'])))
+
+					arguments = {}
+
+					pos_in_buf = 0
+					for arg in messages[message_code]['args']:
+						arg_len = data_type_size_lut[arg['type']]
+						arguments[arg['name']] = conversion_lut[arg['type']](argument_buffer[pos_in_buf:pos_in_buf + arg_len])
+
+						pos_in_buf += arg_len
 
 
-			print(message_text)
+					message_text = message_text.format(**arguments)
 
-		except IndexError:
-			print("Unknown message code: {0}".format(message_code))
+
+				print(message_text)
+
+			except IndexError:
+				print("Unknown message code: {0}".format(message_code))
