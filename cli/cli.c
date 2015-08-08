@@ -95,9 +95,8 @@ void cli_loop(uint32_t sleep_ticks)
 
 	set_term_color(BLUE);
 
+	output_prompt();
 	while (true) {
-		output_prompt();
-
 		char ch;
 		if (!os_buffer_read_ch(rx, (uint8_t *) &ch)) {
 			os_task_sleep(sleep_ticks);
@@ -128,6 +127,8 @@ void cli_loop(uint32_t sleep_ticks)
 		default:
 			break;
 		}
+
+		output_prompt();
 	}
 }
 
@@ -307,20 +308,17 @@ static void process_escape_seq(void)
 
 
 		for (uint8_t i = 0; i < ARRAY_SIZE(sequences); i++) {
-
 			if (sequences[i].no_match) {
 				continue;
 			}
 
-			int match = strcmp(esc_chars, sequences[i].code);
-
-			if (match == 0) {
+			if (strcmp(esc_chars, sequences[i].code) == 0) {
 				sequences[i].action();
 				return;
+			}
 
-			} else if (match > 0) {
+			if (sequences[i].code[esc_char_num] == '\0') {
 				sequences[i].no_match = true;
-				possible_matches--;
 			}
 		}
 	}
