@@ -17,7 +17,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/cm3/nvic.h>
 
-#define BUFFER_SIZE 300
+#define BUFFER_SIZE 1000
 
 static void send_next_ch(void);
 static void recv_next_ch(uint8_t ch);
