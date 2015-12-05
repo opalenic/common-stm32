@@ -28,7 +28,7 @@ struct timer_conf {
 	uint32_t base;
 	enum rcc_periph_clken clken;
 	enum rcc_periph_rst rst;
-	uint32_t irq;
+	uint8_t irq;
 	void (*callback)(void *);
 	void *params;
 	bool periodic;
@@ -58,7 +58,7 @@ static bool valid_timer(enum timeout_timer timer)
 
 void timeout_init(void)
 {
-	for (int i = 0; i < ARRAY_SIZE(conf); i++) {
+	for (unsigned int i = 0; i < ARRAY_SIZE(conf); i++) {
 
 		rcc_periph_clock_enable(conf[i].clken);
 
@@ -84,9 +84,7 @@ bool timeout_start(enum timeout_timer timer, uint32_t timeout_ms, bool periodic,
 		return false;
 	}
 
-	if (conf[timer].running) {
-		return false;
-	}
+	timeout_stop(timer);
 
 	timer_set_counter(conf[timer].base, 0);
 	timer_set_period(conf[timer].base, timeout_ms);
